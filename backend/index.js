@@ -1,5 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const cron = require('node-cron');
+const axios = require('axios');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const authRoutes = require('./routes/authRoutes');
@@ -20,6 +22,15 @@ mongoose.connect('mongodb+srv://codersaro:Sarorosy12@cluster0.av48khu.mongodb.ne
 
 .catch((error) => console.error('Error connecting to MongoDB:', error));
 
+cron.schedule('*/14 * * * *', () => {
+    axios.get('https://instareact-9vx0.onrender.com')
+        .then(response => {
+            console.log('Ping successful:', response.status);
+        })
+        .catch(error => {
+            console.error('Ping failed:', error.message);
+        });
+});
 // Routes
 app.use('/api/auth', authRoutes);
 
